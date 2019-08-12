@@ -1,6 +1,7 @@
 package hex.ama.cucumber;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -26,30 +27,31 @@ public class Addcustomer {
 		driver = new ChromeDriver();
 
 		driver.get("http://demo.guru99.com/telecom/");
-	}
-
-	@When("enter the customer {string} details")
-	public void enter_the_customer_details(String string, DataTable dataTable) {
-
-		List<String> onedlist = dataTable.asList();
-
 		driver.findElement(By.xpath("//*[text()='Add Customer']")).click();
-		driver.findElement(By.xpath("//*[text()='Done']")).click();
-		driver.findElement(By.id("fname")).sendKeys(onedlist.get(0));
-		driver.findElement(By.id("lname")).sendKeys(onedlist.get(1));
-		driver.findElement(By.id("email")).sendKeys(onedlist.get(2));
-		driver.findElement(By.xpath("(//*[@id='message'])[2]")).sendKeys(onedlist.get(3));
-		;
-		driver.findElement(By.id("telephoneno")).sendKeys(onedlist.get(4));
-		driver.findElement(By.xpath("//*[@type='submit']")).click();
-
+		 driver.findElement(By.xpath("//*[text()='Done']")).click();
+	}
+	
+	@When("enter the customer details")
+	public void enter_the_customer_details(io.cucumber.datatable.DataTable dataTable) {
+		
+		Map<String, String> datas=	dataTable.asMap(String.class, String.class);
+		
+	     driver.findElement(By.id("fname")).sendKeys(datas.get("fname"));
+		 driver.findElement(By.id("lname")).sendKeys(datas.get("lname"));
+		 driver.findElement(By.id("email")).sendKeys(datas.get("email"));
+		 driver.findElement(By.xpath("(//*[@id='message'])[2]")).sendKeys(datas.get("address"));
+		 driver.findElement(By.id("telephoneno")).sendKeys(datas.get("phone"));
+		 driver.findElement(By.xpath("//*[@type='submit']")).click();
+	    throw new cucumber.api.PendingException();
 	}
 
 	@Then("I validate the outcomes")
 	public void i_validate_the_outcomes() {
-
-		Assert.assertTrue((driver.findElement(By.xpath("//*[text()='Customer ID']")).isDisplayed()));
+		 Assert.assertTrue((driver.findElement(By.xpath("//*[text()='Customer ID']")).
+				 isDisplayed()));
+				
 
 	}
-
+	
+	
 }
